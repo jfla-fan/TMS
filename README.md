@@ -4,6 +4,14 @@ Task Management System
 Service that manages tasks, their deadlines, sends notifications. \
 Look for openapi.yml to check out the backend api.
 
+Dev Containers vs code extension may be used for comfortable development.
+
+## Internal useful commands
+
+Some commands that you may find useful during development:
+
+* `su -s /bin/bash user` - change user to "user".
+
 ## Makefile
 
 Makefile contains typicaly useful targets for development:
