@@ -443,6 +443,31 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /v1/admin/users/{userId}:
+    get:
+      summary: Get info about the user.
+      tags:
+        - Admin
+      description: Admin-only. Get info about the user with the specified id.
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserNoPassword'
+        400:
+          $ref: '#/components/responses/BadInputError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenAccessError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
     put:
       summary: Update user data by ID
       tags:
