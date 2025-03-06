@@ -1,5 +1,5 @@
 worker-threads: 4
-worker-fs-threads: 2
+worker-fs-threads: 4
 logger-level: debug
 
 is-testing: false

@@ -43,6 +43,7 @@ components_manager:
             path: /tests/{action}
             method: POST
             task_processor: main-task-processor
+            
         handler-ping:
             path: /ping
             method: GET
@@ -50,18 +51,127 @@ components_manager:
             throttling_enabled: false
             url_trailing_slash: strict-match
 
-        handler-hello:                    # Finally! Our handler.
-            path: /v1/hello               # Registering handler by URL '/v1/hello'.
-            method: POST                  # It will only reply to POST requests.
-            task_processor: main-task-processor  # Run it on CPU bound task processor
-
-        postgres-db-1:
+        pg-tms-db:
             dbconnection: $dbconnection
             dbconnection#env: DB_CONNECTION
             blocking_task_processor: fs-task-processor
             dns_resolver: async
             sync-start: false
             connlimit_mode: manual
+
+        handler-user-register-post:
+            path: /v1/auth/register
+            method: POST
+            task_processor: main-task-processor
+            throttling_enabled: false
+            url_trailing_slash: strict-match
+
+        handler-user-login-post:
+            path: /v1/auth/login
+            method: POST
+            task_processor: main-task-processor
+            throttling_enabled: false
+            url_trailing_slash: strict-match
+
+        handler-user-task-create-post:
+            path: /v1/tasks/
+            method: POST
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes: 
+                    - admin 
+                    - user
+
+        handler-user-task-list-get:
+            path: /v1/tasks/
+            method: GET
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+                    - user
+
+        handler-user-task-get:
+            path: /v1/tasks/{task_id}
+            method: GET
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+                    - user
+
+        handler-user-task-put:
+            path: /v1/tasks/{task_id}
+            method: PUT
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+                    - user
+
+        handler-user-task-delete:
+            path: /v1/tasks/{task_id}
+            method: DELETE
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+                    - user
+                
+        handler-admin-user-get:
+            path: /v1/admin/users/{user_id}
+            method: GET
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+
+        handler-admin-user-post:
+            path: /v1/admin/users/
+            method: POST
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+
+        handler-admin-user-put:
+            path: /v1/admin/users/{user_id}
+            method: PUT
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+
+        handler-admin-user-delete:
+            path: /v1/admin/users/{user_id}
+            method: DELETE
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+
+        handler-extra-echo-get:
+            path: /echo
+            method: GET
+            task_processor: main-task-processor
 
         dns-client:
             fs-task-processor: fs-task-processor

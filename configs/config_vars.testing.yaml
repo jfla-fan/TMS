@@ -1,5 +1,5 @@
 worker-threads: 4
-worker-fs-threads: 2
+worker-fs-threads: 4
 logger-level: debug
 
 is-testing: true
@@ -7,4 +7,4 @@ is-testing: true
 server-port: 8080
 
 # pg_service_template_db_1 is the service name + _ + filename of the db_1.sql
-dbconnection: 'postgresql://testsuite@localhost:15433/pg_service_template_db_1'
+dbconnection: 'postgresql://testsuite@localhost:15433/pg_tms_db'
