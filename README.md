@@ -1,7 +1,7 @@
 # TMS
 Task Management System
 
-Service that manages tasks, their deadlines, sends notifications. \
+Service that manages tasks, its deadlines, sends notifications. \
 Look for openapi.yml to check out the backend api.
 
 Dev Containers vs code extension may be used for comfortable development.
@@ -11,6 +11,60 @@ Dev Containers vs code extension may be used for comfortable development.
 Some commands that you may find useful during development:
 
 * `su -s /bin/bash user` - change user to "user".
+* `curl -X POST "http://localhost:8080/v1/auth/register" \
+    -H "Content-Type: application/json" \
+    -d '{
+    "name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "login": "john_doe",
+    "password": "securepassword123"
+}'` - create a user;
+
+    Expected returned token:
+    `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiZXhwIjoxNzM0OTU0Njc5LCJpYXQiOjE3MzQ5NTM3NzksImlzcyI6InRtcy5zZXJ2aWNlIiwibG9naW4iOiJqb2huX2RvZSIsInN1YiI6IjMiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0.Yeqkz74hOI3K5woIron-LSVRamrHV6BpIDEcECTu_L4`
+
+* `curl -X POST "http://localhost:8080/v1/auth/login" \
+    -H "Content-Type: application/json" \
+    -d '{
+    "login": "john_doe",
+    "password": "securepassword123"
+}'` - log in, returns token;
+
+* `curl -X GET "http://localhost:8080/v1/tasks/1" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiZXhwIjoxNzM4Njk2ODE0LCJpYXQiOjE3Mzg2NzUyMTQsImlzcyI6InRtcy5zZXJ2aWNlIiwibG9naW4iOiJqb2huX2RvZSIsInN1YiI6IjMiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0.8XSgajauiBpBrn4GBc7iuFZB9iq7W3CxwK9iGZHPmWo"` - get a task
+
+    Expected returned:
+    `{
+        "task_id": 1,
+        "title": "Sample Task",
+        "description": "This is a sample task description.",
+        "category": "Work",
+        "deadline": "2023-12-31T23:59:00Z",
+        "priority": "normal",
+        "status": "pending",
+        "user_id": 3,
+        "created_at": "2023-10-01T10:00:00Z",
+        "updated_at": "2023-10-01T15:30:00Z"
+    }`
+
+* `curl -X POST "http://localhost:8080/v1/tasks" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiZXhwIjoxNzM4Njk2ODE0LCJpYXQiOjE3Mzg2NzUyMTQsImlzcyI6InRtcy5zZXJ2aWNlIiwibG9naW4iOiJqb2huX2RvZSIsInN1YiI6IjMiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0.8XSgajauiBpBrn4GBc7iuFZB9iq7W3CxwK9iGZHPmWo" \
+    -H "Content-Type: application/json" \
+    -d '{
+    "title": "Implement user authentication",
+    "description": "Develop and test JWT-based authentication",
+    "category": "work",
+    "deadline": "2025-01-23T11:58:17Z",
+    "priority": "urgent",
+    "status": "pending"
+    }'` - create a task.
+
+* ` curl -X DELETE "http://localhost:8080/v1/tasks/2" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiZXhwIjoxNzM4Njk2ODE0LCJpYXQiOjE3Mzg2NzUyMTQsImlzcyI6InRtcy5zZXJ2aWNlIiwibG9naW4iOiJqb2huX2RvZSIsInN1YiI6IjMiLCJ1c2VyX3JvbGUiOiJ1c2VyIn0.8XSgajauiBpBrn4GBc7iuFZB9iq7W3CxwK9iGZHPmWo" ` - delete task.
+
+* `psql postgresql://user:password@localhost:5432/pg_tms_db` - postgresql connection command.
+
 
 ## Makefile
 
