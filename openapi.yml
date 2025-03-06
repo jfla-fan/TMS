@@ -65,6 +65,9 @@ components:
             task_id:
               type: integer
               example: 101
+            user_id:
+              type: integer
+              example: 3
             created_at:
               type: string
               format: date-time
@@ -85,6 +88,15 @@ components:
     TaskUpdate:
       allOf:
         - $ref: '#/components/schemas/TaskBase'
+
+    TaskUpdate2:
+      allOf:
+        - $ref: '#/components/schemas/TaskBase'
+        - type: object
+          properties:
+            user_id:
+              type: integer
+              example: 3
 
     UserCommon:
       type: object
@@ -143,17 +155,53 @@ components:
     UserCreate:
       type: object
       properties:
-        user_id:
-          type: integer
-          example: 1
-        created_at:
+        name:
           type: string
-          format: date-time
-          example: "2024-09-25T12:00:00"
-        updated_at:
+          example: "John"
+        last_name:
           type: string
-          format: date-time
-          example: "2024-09-26T10:00:00"
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        login:
+          type: string
+          example: "john_doe"        
+        password:
+          type: string
+          example: "abrew1"
+
+    UserCreate2:
+      allOf:
+        - $ref: '#/components/schemas/UserCreate'
+        - type: object
+          properties:
+            role:
+              $ref: '#/components/schemas/UserRole'
+
+    UserUpdate:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+    
+    CommonError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code.
+          example: "validation_error"
+        message:
+          type: string
+          description: A human-readable error message.
+          example: "Invalid input data"
+        details:
+          type: object
+          description: Additional context or details about the error.
+          example: {"field": "email", "reason": "must be a valid email address"}
+      required:
+        - code
+        - message
 
   responses:
     UnauthorizedError:
@@ -161,6 +209,9 @@ components:
 
     BadInputError:
       description: Invalid input or missing required fields
+
+    DublicateEmailOrLoginError:
+      description: Dublicate email or login
 
     TaskNotFoundError:
       description: Task not found
@@ -174,14 +225,124 @@ components:
     InternalServerError:
       description: Internal server error
 
-security:
-  - BearerAuth: []
+  parameters:
+    UserIdArrayFilter:
+      name: user_ids
+      in: query
+      description: IDs of users to filter tasks by
+      required: false
+      schema:
+        type: array
+        items:
+          type: integer
+      example: [3, 4]
+    StatusArrayFilter:
+      name: statuses
+      in: query
+      description: Filter tasks by one or more statuses
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/TaskStatus'
+      style: form
+      explode: false
+      example: ["pending", "in_progress"]
+    PriorityArrayFilter:
+      name: priorities
+      in: query
+      description: Filter tasks by one or more priorities
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/TaskPriority'
+      style: form
+      explode: false
+      example: ["low", "normal"]
+    CategoryArrayFilter:
+      name: categories
+      in: query
+      description: Filter tasks by one or more categories
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      example: ["work", "home"]
+    DeadlineStartFilter:
+      name: deadline_start
+      in: query
+      description: Filter tasks with deadlines on or after this date ("2025-01-23T11:58:17Z")
+      required: false
+      schema:
+        type: string
+        format: date
+    DeadlineEndFilter:
+      name: deadline_end
+      in: query
+      description: Filter tasks with deadlines on or before this date ("2025-01-23T11:58:17Z")
+      required: false
+      schema:
+        type: string
+        format: date
+    PageParameter:
+      name: page
+      in: query
+      description: Page number for pagination
+      required: false
+      schema:
+        type: integer
+        default: 1
+      example: 1
+    LimitParameter:
+      name: limit
+      in: query
+      description: Number of items per page
+      required: false
+      schema:
+        type: integer
+        default: 10
+      example: 10
 
 tags:
   - name: Admin
   - name: User
 
 paths:
+
+  /v1/auth/register:
+    post:
+      summary: User registration
+      tags:
+        - User
+      description: Registers a new user and returns the created user information along with an authentication token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Authentication token for the newly registered user
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    $ref: '#/components/schemas/UserNoPassword'
+        400:
+          $ref: '#/components/responses/BadInputError'
+        404:
+          $ref: '#/components/responses/DublicateEmailOrLoginError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
 
   /v1/auth/login:
     post:
@@ -196,10 +357,10 @@ paths:
             schema:
               type: object
               required:
-                - username
+                - login
                 - password
               properties:
-                username:
+                login:
                   type: string
                   example: "john_doe"
                 password:
@@ -227,31 +388,13 @@ paths:
         - User
       description: Retrieve all tasks, optionally filtering by status, priority, category, or deadline.
       parameters:
-        - name: status
-          in: query
-          description: Filter tasks by status
-          required: false
-          schema:
-            $ref: '#/components/schemas/TaskStatus'
-        - name: priority
-          in: query
-          description: Filter tasks by priority
-          required: false
-          schema:
-            $ref: '#/components/schemas/TaskPriority'
-        - name: category
-          in: query
-          description: Filter tasks by category (e.g., "work", "personal")
-          required: false
-          schema:
-            type: string
-        - name: deadline
-          in: query
-          description: Filter tasks by deadline (YYYY-MM-DD format)
-          required: false
-          schema:
-            type: string
-            format: date
+        - $ref: '#/components/parameters/StatusArrayFilter'
+        - $ref: '#/components/parameters/PriorityArrayFilter'
+        - $ref: '#/components/parameters/CategoryArrayFilter'
+        - $ref: '#/components/parameters/DeadlineStartFilter'
+        - $ref: '#/components/parameters/DeadlineEndFilter'
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/LimitParameter'
       security:
         - BearerAuth: []
       responses:
@@ -260,9 +403,24 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Task'
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  total:
+                    type: integer
+                    description: Total number of tasks
+                    example: 10
+                  page:
+                    type: integer
+                    description: Current page number
+                    example: 1
+                  limit:
+                    type: integer
+                    description: Number of tasks per page
+                    example: 10
         401:
           $ref: '#/components/responses/UnauthorizedError'
         500:
@@ -294,19 +452,21 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerError'
 
-  /v1/admin/tasks/{userId}:
+  /v1/admin/tasks:
     get:
-      summary: Get all tasks for a specific user
+      summary: Get all tasks with optional filtering and pagination.
       tags:
         - Admin
-      description: Retrieve all tasks associated with a specific user by user ID.
+      description: Retrieve tasks that satisfy filtering and pagination options.
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: ID of the user whose tasks are to be retrieved
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/UserIdArrayFilter'
+        - $ref: '#/components/parameters/StatusArrayFilter'
+        - $ref: '#/components/parameters/PriorityArrayFilter'
+        - $ref: '#/components/parameters/CategoryArrayFilter'
+        - $ref: '#/components/parameters/DeadlineStartFilter'
+        - $ref: '#/components/parameters/DeadlineEndFilter'
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/LimitParameter'
       security:
         - BearerAuth: []
       responses:
@@ -405,6 +565,10 @@ paths:
       responses:
         204:
           description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -417,22 +581,29 @@ paths:
       summary: Create a new user
       tags:
         - Admin
-      description: Admin-only. Create a new user in the system.
+      description: Admin-only. Creates a new user in the system and returns the created user information along with an authentication token.
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserBase'
-      security:
-        - BearerAuth: []
+              $ref: '#/components/schemas/UserCreate2'
       responses:
         201:
           description: User created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserCreate'
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Authentication token for the newly created user
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    $ref: '#/components/schemas/UserNoPassword'
         400:
           $ref: '#/components/responses/BadInputError'
         401:
@@ -440,14 +611,21 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenAccessError'
         500:
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'      
 
-  /v1/admin/users/{userId}:
+  /v1/admin/users/{user_id}:
     get:
       summary: Get info about the user.
       tags:
         - Admin
-      description: Admin-only. Get info about the user with the specified id.
+      description: Admin-only. Get info about the user with the specified id without password.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user to update
+          schema:
+            type: integer
       security:
         - BearerAuth: []
       responses:
@@ -456,9 +634,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserNoPassword'
+                $ref: '#/components/schemas/UserNoPassword'
         400:
           $ref: '#/components/responses/BadInputError'
         401:
@@ -474,7 +650,7 @@ paths:
         - Admin
       description: Allows an admin to update a specific user's information.
       parameters:
-        - name: userId
+        - name: user_id
           in: path
           required: true
           description: ID of the user to update
@@ -485,7 +661,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserUpdate'
       security:
         - BearerAuth: []
       responses:
@@ -506,7 +682,7 @@ paths:
         - Admin
       description: Admin-only. Deletes a user by their ID.
       parameters:
-        - name: userId
+        - name: user_id
           in: path
           required: true
           schema:
@@ -526,43 +702,19 @@ paths:
           $ref: '#/components/responses/UserNotFoundError'
         500:
           $ref: '#/components/responses/InternalServerError'
-  
-  /v1/admin/tasks:
-    get:
-      summary: Get all tasks in the system
-      tags:
-        - Admin
-      description: Admin-only. Retrieves all tasks regardless of the owner.
-      security:
-        - BearerAuth: []
-      responses:
-        200:
-          description: A list of all tasks
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Task'
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        403:
-          $ref: '#/components/responses/ForbiddenAccessError'
-        500:
-          $ref: '#/components/responses/InternalServerError'
 
-  /v1/admin/tasks/{taskId}:
+  /v1/admin/tasks/{task_id}:
     put:
       summary: Update a task
       tags:
         - Admin
       description: Admin-only. Update any task by its ID.
       parameters:
-        - name: taskId
+        - name: task_id
           in: path
           required: true
           schema:
-            type: string
+            type: integer
             example: "101"
           description: The ID of the task to update
       requestBody:
@@ -570,7 +722,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskUpdate'
+              $ref: '#/components/schemas/TaskUpdate2'
       security:
         - BearerAuth: []
       responses:
@@ -597,11 +749,11 @@ paths:
         - Admin
       description: Admin-only. Deletes any task by its ID.
       parameters:
-        - name: taskId
+        - name: task_id
           in: path
           required: true
           schema:
-            type: string
+            type: integer
             example: "101"
           description: The ID of the task to delete
       security:
@@ -609,6 +761,10 @@ paths:
       responses:
         204:
           description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         403:
