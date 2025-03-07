@@ -63,7 +63,9 @@ userver::formats::json::Value RegisterUserHandler::HandleRequestJsonThrow(const 
         return tms::error::MakeErrorJson(tms::error::kConflictError, "Email or login already exist.");
     } catch (const std::runtime_error& ex)
     {
-        // fix, generate argon2id failed
+        LOG_ERROR() << fmt::format("Error while generating argon2id password hash, details: {}", ex.what());
+        request.SetResponseStatus(userver::server::http::HttpStatus::kInternalServerError);
+        return tms::error::MakeErrorJson(tms::error::kServerError, "Failed to generate password hash.");
     }
     
     userver::formats::json::ValueBuilder builder;
