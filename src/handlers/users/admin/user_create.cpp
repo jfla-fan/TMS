@@ -1,12 +1,12 @@
 #include "user_create.hpp"
 
-#include "../../../utils/jwt.hpp"
-#include "../../../utils/hash.hpp"
-#include "../../../utils/error.hpp"
-#include "../../../models/user.hpp"
-#include "../../../db/queries.hpp"
-#include "../../../dto/user.hpp"
-#include "../../../validators/validators.hpp"
+#include "utils/jwt.hpp"
+#include "utils/hash.hpp"
+#include "utils/error.hpp"
+#include "models/user.hpp"
+#include "db/queries.hpp"
+#include "dto/user.hpp"
+#include "validators/validators.hpp"
 
 #include <userver/components/component_context.hpp>
 #include <userver/formats/json/value.hpp>

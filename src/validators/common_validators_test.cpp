@@ -25,7 +25,7 @@ namespace
     {
         // Correct entries
         ValidateUtf8LengthTestEntry
-            {"some",            {4, 4}, true}, // Exact minimum length
+        {"some",            {4, 4},     true}, // Exact minimum length
         {"valid",           {4, 10},    true}, // Within range
         {"valid string",    {1, 20},    true}, // Within range
         {"中文",            {1, 2},     true}, // Unicode within range
@@ -46,7 +46,7 @@ namespace
         {"a",                           {2, 10}, false}, // Single character below minimum
         {"12345678901",                 {1, 10}, false}, // Above maximum
         {"   ",                         {4, 10}, false}, // Spaces below minimum
-        {"\n\t\r",                      {4, 4}, false} // below minimum
+        {"\n\t\r",                      {4, 4},  false} // below minimum
     };
 
     struct ValidateRegexTestEntry
@@ -85,11 +85,11 @@ namespace
     {
         // Correct entries
         ValidateFieldTestEntry
-            { "hello",                      { {4, 20}, {  {R"(^[a-z]+$)"} } },    true }, // Valid length and regex
-        { "HELLO",                      { {4, 20}, { {R"(^[A-Z]+$)"     } } },    true }, // Valid length and regex
-        { "12345",                      { {4, 20}, { {R"(^\d+$)"        } } },    true }, // Valid length and regex
-        { "hello123",                   { {4, 20}, { {R"(^[a-z0-9]+$)"  } } },    true }, // Valid length and regex
-        { "hello_world",                { {4, 20}, { {R"(^[a-z_]+$)"    } } },    true }, // Valid length and regex
+        { "hello",                      { {4, 20}, {  {R"(^[a-z]+$)"    } } },    true  }, // Valid length and regex
+        { "HELLO",                      { {4, 20}, { {R"(^[A-Z]+$)"     } } },    true  }, // Valid length and regex
+        { "12345",                      { {4, 20}, { {R"(^\d+$)"        } } },    true  }, // Valid length and regex
+        { "hello123",                   { {4, 20}, { {R"(^[a-z0-9]+$)"  } } },    true  }, // Valid length and regex
+        { "hello_world",                { {4, 20}, { {R"(^[a-z_]+$)"    } } },    true  }, // Valid length and regex
     
         // Incorrect entries
         { std::nullopt,                 { {4, 20}, { {R"(^[a-z]+$)" } } },        false }, // Missing value

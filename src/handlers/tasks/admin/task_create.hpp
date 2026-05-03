@@ -6,12 +6,12 @@
 #include <userver/formats/json.hpp>
 
 
-namespace tms::handlers::tasks::post
+namespace tms::handlers::tasks::admin::post
 {
     class CreateTaskHandler final : public userver::server::handlers::HttpHandlerJsonBase
     {
     public:
-        static constexpr std::string_view kName = "handler-user-task-post";
+        static constexpr std::string_view kName = "handler-admin-task-post";
 
         CreateTaskHandler(const userver::components::ComponentConfig& config,
                           const userver::components::ComponentContext& component_context);

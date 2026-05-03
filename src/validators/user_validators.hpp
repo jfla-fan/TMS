@@ -22,4 +22,5 @@ namespace tms::validators
     bool ValidateUserLogin(const std::optional< std::string_view >& login, ErrorRef error_info = std::nullopt);
     bool ValidateUserPassword(const std::optional< std::string_view >& password, ErrorRef error_info = std::nullopt);
     bool ValidateUserRole(const std::optional< tms::models::EUserRole >& role, ErrorRef error_info = std::nullopt);
+    bool ValidateUserId(const std::optional< tms::models::UserId >& id, ErrorRef error_info = std::nullopt);
 }

@@ -14,7 +14,7 @@ namespace tms::handlers::tasks::get
         static constexpr std::string_view kName = "handler-user-task-get";
 
         GetTaskHandler(const userver::components::ComponentConfig& config,
-                         const userver::components::ComponentContext& component_context);
+                       const userver::components::ComponentContext& component_context);
 
         userver::formats::json::Value HandleRequestJsonThrow(const userver::server::http::HttpRequest& request,
                                                              const userver::formats::json::Value& request_json,

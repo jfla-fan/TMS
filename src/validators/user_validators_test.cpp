@@ -24,7 +24,7 @@ namespace
     constexpr std::array< ValidateUserFieldTestEntry, 11 > ValidateUserNameTestEntries = {
         // Correct entries
         ValidateUserFieldTestEntry
-            { "JohnDoe",                        true  }, // Valid name
+        { "JohnDoe",                        true  }, // Valid name
         { "Admin",                          true  }, // Valid name 2
         { "Élodie",                         true  }, // Unicode name
         { "O'Connor",                       true  }, // Name with apostrophe
@@ -36,14 +36,14 @@ namespace
         { "JohnDoe123",                     false }, // Contains numbers
         { "John Doe",                       false }, // Contains space
         { "",                               false }, // Empty string
-       { "John@Doe",                       false }, // Contains invalid symbol
+        { "John@Doe",                       false }, // Contains invalid symbol
     };
 
     constexpr std::array< ValidateUserFieldTestEntry, 11 > ValidateUserLastNameTestEntries =
     {
         // Correct entries (expected_result = true)
         ValidateUserFieldTestEntry
-            { "Smith",                          true  }, // Valid last name
+        { "Smith",                          true  }, // Valid last name
         { "User",                           true  }, // Valid last name 2
         { "Åsa",                            true  }, // Unicode last name
         { "O’Reilly",                       true  }, // Last name with apostrophe
@@ -55,13 +55,13 @@ namespace
         { "Smith123",                       false }, // Contains numbers
         { "van der Waals",                  false }, // Contains space
         { "",                               false }, // Empty string
-       { "Smith@Doe",                      false }, // Contains invalid symbol
+        { "Smith@Doe",                      false }, // Contains invalid symbol
     };
 
     constexpr std::array<ValidateUserFieldTestEntry, 23> ValidateUserEmailTestEntries = {
         // Correct entries
         ValidateUserFieldTestEntry
-            { "user@example.com",               true  }, // Valid email
+        { "user@example.com",               true  }, // Valid email
         { "admin@example.com",              true  }, // Valid email 2
         { "user.name+tag@example.co.uk",    true  }, // Valid email with tag
         { "user_name@example.com",          true  }, // Valid email with underscore
@@ -73,26 +73,26 @@ namespace
         { "user@example.co.in",             true  }, // Valid email with country code TLD
     
         // Incorrect entries
-        { "user@",                         false }, // Invalid domain
-        { "user@com",                      false }, // Invalid domain (no TLD)
-        { "user@example..com",             false }, // Double dot
-        { "user@.com",                     false }, // Leading dot
-        { "user@example,com",              false }, // Invalid symbol
-        { "user@example.",                 false }, // Trailing dot
-        { "user@.example.com",             false }, // Leading dot in domain
-        { "user@example..com",             false }, // Consecutive dots
-        { "user@-example.com",             false }, // Leading hyphen in domain
-        { "user@example-.com",             false }, // Trailing hyphen in domain
-        { "user@example.c",                false }, // TLD too short
-        { "user@example.123",              false }, // Numeric TLD
-        { "user@example.c_o_m",            false }, // Invalid characters in TLD
+        { "user@",                         false  }, // Invalid domain
+        { "user@com",                      false  }, // Invalid domain (no TLD)
+        { "user@example..com",             false  }, // Double dot
+        { "user@.com",                     false  }, // Leading dot
+        { "user@example,com",              false  }, // Invalid symbol
+        { "user@example.",                 false  }, // Trailing dot
+        { "user@.example.com",             false  }, // Leading dot in domain
+        { "user@example..com",             false  }, // Consecutive dots
+        { "user@-example.com",             false  }, // Leading hyphen in domain
+        { "user@example-.com",             false  }, // Trailing hyphen in domain
+        { "user@example.c",                false  }, // TLD too short
+        { "user@example.123",              false  }, // Numeric TLD
+        { "user@example.c_o_m",            false  }, // Invalid characters in TLD
     };
 
     constexpr std::array< ValidateUserFieldTestEntry, 11 > ValidateUserLoginTestEntries =
     {
         // Correct entries (expected_result = true)
         ValidateUserFieldTestEntry
-            { "user_123",                       true  }, // Valid login
+        { "user_123",                       true  }, // Valid login
         { "admin_login",                    true  }, // Valid login 2
         { "user-login",                     true  }, // Valid login with hyphen
         { "UserLogin",                      true  }, // Valid login with uppercase
@@ -104,13 +104,13 @@ namespace
         { "user@login",                     false }, // Contains invalid symbol
         { "user login",                     false }, // Contains space
         { "",                               false }, // Empty string
-       { "user!",                          false }, // Contains invalid symbol
+        { "user!",                          false }, // Contains invalid symbol
     };
 
     constexpr std::array< ValidateUserFieldTestEntry, 11 > ValidateUserPasswordTestEntries = {
         // Correct entries (expected_result = true)
         ValidateUserFieldTestEntry
-            { "Admin@123",                      true  }, // Valid password
+        { "Admin@123",                      true  }, // Valid password
         { "Password123!",                   true  }, // Valid password
         { "P@ssw0rd",                       true  }, // Valid password
         { "SecurePwd1#",                    true  }, // Valid password
@@ -122,7 +122,7 @@ namespace
         { "PASSWORD123",                    false }, // No lowercase or special character
         { "P@ss",                           false }, // Too short
         { "",                               false }, // Empty string
-       { "password123",                    false }, // No special character
+        { "password123",                    false }, // No special character
     };
 }
 

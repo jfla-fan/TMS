@@ -1,6 +1,5 @@
 #include "task_update.hpp"
 
-#include "utils/jwt.hpp"
 #include "utils/error.hpp"
 #include "db/queries.hpp"
 #include "dto/task.hpp"
@@ -13,7 +12,7 @@
 #include <userver/storages/postgres/component.hpp>
 
 
-namespace tms::handlers::tasks::put
+namespace tms::handlers::tasks::admin::put
 {
 
 UpdateTaskHandler::UpdateTaskHandler(const userver::components::ComponentConfig& config,
@@ -26,7 +25,7 @@ UpdateTaskHandler::UpdateTaskHandler(const userver::components::ComponentConfig&
 
 userver::formats::json::Value UpdateTaskHandler::HandleRequestJsonThrow(const userver::server::http::HttpRequest& request,
                                                                         const userver::formats::json::Value& request_json,
-                                                                        userver::server::request::RequestContext& context) const
+                                                                        userver::server::request::RequestContext&) const
 {
     TaskId task_id;
     try {
@@ -37,36 +36,39 @@ userver::formats::json::Value UpdateTaskHandler::HandleRequestJsonThrow(const us
         return tms::error::MakeErrorJson(tms::error::kValidationError, "Failed to parse task id");
     }
 
-    auto update_data = request_json.As< tms::dto::TaskUpdateDTO >();
+    auto update_data = request_json.As< tms::dto::TaskUpdateDTO2 >();
 
     tms::error::ErrorInfo error_info;
     if (!tms::validators::Validate(update_data, error_info))
     {
-        LOG_WARNING() << fmt::format("Failed to validate update task dto: {}", error_info.message);
+        LOG_WARNING() << fmt::format("Failed to validate update task dto 2: {}", error_info.message);
         request.SetResponseStatus(userver::server::http::HttpStatus::kBadRequest);
         return tms::error::MakeErrorJson(std::move(error_info));
     }
 
-    int user_id = context.GetData< tms::utils::JWTAuthSettings >(tms::utils::JWTAuthSettings::kRequestContextKey).id;
-
     tms::models::Task task;
     try {
         auto result = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-                                           tms::queries::kUpdateTaskByIdAndUser,
+                                           tms::queries::kUpdateTaskById,
                                            update_data.title,
                                            update_data.description,
                                            update_data.category,
                                            update_data.deadline,
                                            update_data.priority,
                                            update_data.status,
-                                           task_id,
-                                           user_id);
+                                           update_data.user_id,
+                                           task_id);
         
         task = result.AsSingleRow< tms::models::Task >(userver::storages::postgres::kRowTag);
     } catch (const userver::storages::postgres::NonSingleRowResultSet& ex) {
         LOG_ERROR() << fmt::format("Failed to find task with id - {}, details: {}", task_id, ex.what());
         request.SetResponseStatus(userver::server::http::HttpStatus::kNotFound);
         return tms::error::MakeErrorJson(tms::error::kTaskNotFoundError, fmt::format("Failed to find task (id - {})", task_id));
+    } catch (const userver::storages::postgres::ForeignKeyViolation& ex)
+    {
+        LOG_ERROR() << fmt::format("Failed to update task for new user {}, details: {}", *update_data.user_id, ex.what());
+        request.SetResponseStatus(userver::server::http::HttpStatus::kNotFound);
+        return tms::error::MakeErrorJson(tms::error::kUserNotFoundError, "User not found.");
     }
 
     return userver::formats::json::ValueBuilder { task }.ExtractValue();

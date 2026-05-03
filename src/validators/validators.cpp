@@ -56,6 +56,11 @@ namespace tms::validators
 
     }
 
+    bool Validate(const tms::dto::TaskCreateDTO2& task_create_dto, ErrorRef error_info)
+    {
+        return Validate(static_cast< tms::dto::TaskCreateDTO >(task_create_dto), error_info) &&
+               ValidateUserId(task_create_dto.user_id, error_info);
+    }
 
     bool Validate(const tms::dto::TaskUpdateDTO& task_create_dto, ErrorRef error_info)
     {

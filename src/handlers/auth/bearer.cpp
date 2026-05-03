@@ -73,7 +73,7 @@ AuthCheckerBearer::AuthCheckResult AuthCheckerBearer::CheckAuth(const userver::s
     try
     {
         parsedTokenData = utils::DecodeJWT(token);
-    } catch (const std::runtime_error& ex)
+    } catch (const std::exception& ex)
     {
         LOG_WARNING() << fmt::format("Token parsing error: {}.", ex.what());
 

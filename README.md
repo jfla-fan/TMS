@@ -11,6 +11,7 @@ Dev Containers vs code extension may be used for comfortable development.
 Some commands that you may find useful during development:
 
 * `su -s /bin/bash user` - change user to "user".
+* `chown -R user:users build_debug` - change ownership of build directory if accidently tried to build with "root"
 * `curl -X POST "http://localhost:8080/v1/auth/register" \
     -H "Content-Type: application/json" \
     -d '{
@@ -27,8 +28,8 @@ Some commands that you may find useful during development:
 * `curl -X POST "http://localhost:8080/v1/auth/login" \
     -H "Content-Type: application/json" \
     -d '{
-    "login": "john_doe",
-    "password": "securepassword123"
+    "login": "admin_login",
+    "password": "Admin@123"
 }'` - log in, returns token;
 
 * `curl -X GET "http://localhost:8080/v1/tasks/1" \

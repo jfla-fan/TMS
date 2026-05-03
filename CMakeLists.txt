@@ -57,6 +57,9 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/dto/task.cpp
 
     # handlers
+    src/handlers/details/filter_settings.hpp
+    src/handlers/details/filter_settings.cpp
+
     src/handlers/auth/bearer.hpp
     src/handlers/auth/bearer.cpp
 
@@ -70,23 +73,34 @@ add_library(${PROJECT_NAME}_objs OBJECT
 
     src/handlers/users/admin/user_create.hpp
     src/handlers/users/admin/user_create.cpp
-    src/handlers/users/admin/user_get.hpp
-    src/handlers/users/admin/user_get.cpp
     src/handlers/users/admin/user_update.hpp
     src/handlers/users/admin/user_update.cpp
+    src/handlers/users/admin/user_get.hpp
+    src/handlers/users/admin/user_get.cpp
     src/handlers/users/admin/user_delete.hpp
     src/handlers/users/admin/user_delete.cpp
 
     src/handlers/tasks/task_create.hpp
     src/handlers/tasks/task_create.cpp
-    src/handlers/tasks/task_get.hpp
-    src/handlers/tasks/task_get.cpp
     src/handlers/tasks/task_update.hpp
     src/handlers/tasks/task_update.cpp
+    src/handlers/tasks/task_get.hpp
+    src/handlers/tasks/task_get.cpp
+    src/handlers/tasks/task_list_get.hpp
+    src/handlers/tasks/task_list_get.cpp
     src/handlers/tasks/task_delete.hpp
     src/handlers/tasks/task_delete.cpp
-    src/handlers/tasks/task_list.hpp
-    src/handlers/tasks/task_list.cpp
+
+    src/handlers/tasks/admin/task_create.hpp
+    src/handlers/tasks/admin/task_create.cpp
+    src/handlers/tasks/admin/task_update.hpp
+    src/handlers/tasks/admin/task_update.cpp
+    src/handlers/tasks/admin/task_get.hpp
+    src/handlers/tasks/admin/task_get.cpp
+    src/handlers/tasks/admin/task_list_get.hpp
+    src/handlers/tasks/admin/task_list_get.cpp
+    src/handlers/tasks/admin/task_delete.hpp
+    src/handlers/tasks/admin/task_delete.cpp
 
     # validators
     src/validators/validation_rules.hpp

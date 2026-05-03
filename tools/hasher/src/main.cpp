@@ -1,13 +1,16 @@
 #include <boost/program_options/errors.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/throw_exception.hpp>
-#include <userver/utils/str_icase.hpp>
 #include <boost/program_options.hpp>
 #include <boost/unordered_map.hpp>
+
+#include <userver/utils/str_icase.hpp>
+
 #include <fmt/format.h>
 
 #include "utils/error.hpp"
 #include "utils/hash.hpp"
+
 #include "validators/user_validators.hpp"
 
 #include <cassert>

@@ -133,18 +133,6 @@ struct fmt::formatter< tms::models::ETaskStatus >
 inline constexpr std::string_view tms::models::ToStringView(ETaskStatus status)
 {
     return userver::storages::postgres::io::CppToUserPg<tms::models::ETaskStatus>::enumerators.TryFind(status).value();
-
-    // using tms::models::ETaskStatus;
-
-    // static std::unordered_map< ETaskStatus, std::string_view > s_map
-    // {
-    //     { ETaskStatus::kPending, "pending" },
-    //     { ETaskStatus::kInProgress, "in_progress" },
-    //     { ETaskStatus::kCompleted, "completed"},
-    //     { ETaskStatus::kExpired, "expired"}
-    // };
-
-    // return s_map[status];
 }
 
 inline constexpr std::optional< tms::models::ETaskStatus > tms::models::TaskStatusFromString(std::string_view status)
@@ -155,17 +143,6 @@ inline constexpr std::optional< tms::models::ETaskStatus > tms::models::TaskStat
 inline constexpr std::string_view tms::models::ToStringView(ETaskPriority priority)
 {
     return userver::storages::postgres::io::CppToUserPg<tms::models::ETaskPriority>::enumerators.TryFind(priority).value();
-
-    // using tms::models::ETaskPriority;
-
-    // static std::unordered_map< ETaskPriority, std::string_view > s_map
-    // {
-    //     { ETaskPriority::kLow, "low" },
-    //     { ETaskPriority::kNormal, "normal" },
-    //     { ETaskPriority::kUrgent, "urgent"}
-    // };
-
-    // return s_map[priority];
 }
 
 inline constexpr std::optional< tms::models::ETaskPriority > tms::models::TaskPriorityFromString(std::string_view priority)

@@ -34,4 +34,10 @@ namespace tms::validators
     {
         return ValidateMissing(role, error_info, "role");
     }
+
+    bool ValidateUserId(const std::optional< tms::models::UserId >& id, ErrorRef error_info)
+    {
+        return ValidateMissing(id, error_info, "user_id");
+    }
+
 }

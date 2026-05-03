@@ -1,8 +1,8 @@
 #include "user_delete.hpp"
 
-#include "../../../utils/error.hpp"
-#include "../../../models/user.hpp"
-#include "../../../db/queries.hpp"
+#include "utils/error.hpp"
+#include "models/user.hpp"
+#include "db/queries.hpp"
 
 #include <userver/http/status_code.hpp>
 #include <userver/storages/postgres/exceptions.hpp>

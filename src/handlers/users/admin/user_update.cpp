@@ -1,11 +1,11 @@
 #include "user_update.hpp"
 
-#include "../../../models/user.hpp"
-#include "../../../dto/user.hpp"
-#include "../../../db/queries.hpp"
-#include "../../../utils/error.hpp"
-#include "../../../utils/hash.hpp"
-#include "../../../validators/validators.hpp"
+#include "models/user.hpp"
+#include "dto/user.hpp"
+#include "db/queries.hpp"
+#include "utils/error.hpp"
+#include "utils/hash.hpp"
+#include "validators/validators.hpp"
 
 #include <userver/storages/postgres/exceptions.hpp>
 #include <userver/utils/from_string.hpp>
@@ -73,7 +73,7 @@ userver::formats::json::Value UpdateUserHandler::HandleRequestJsonThrow(const us
         return tms::error::MakeErrorJson(tms::error::kConflictError, "Email or login already exist");
     } catch (const userver::storages::postgres::NonSingleRowResultSet& ex)
     {
-        LOG_ERROR() << fmt::format("Failed to find user with id - {}", user_id);
+        LOG_ERROR() << fmt::format("Failed to find user with id - {}, details: {}", user_id, ex.what());
         request.SetResponseStatus(userver::server::http::HttpStatus::kNotFound);
         return tms::error::MakeErrorJson(tms::error::kUserNotFoundError, "User not found");
     }

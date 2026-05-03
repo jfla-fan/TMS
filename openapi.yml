@@ -85,6 +85,15 @@ components:
         - priority
         - status
 
+    TaskCreate2:
+      allOf:
+        - $ref: '#/components/schemas/TaskCreate'
+        - type: object
+          properties:
+            user_id:
+              type: integer
+              example: 3
+
     TaskUpdate:
       allOf:
         - $ref: '#/components/schemas/TaskBase'
@@ -453,6 +462,33 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /v1/admin/tasks:
+    post:
+      summary: Create a new task
+      tags:
+        - Admin
+      description: Add a new task to the system for any user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate2'
+      security:
+        - BearerAuth: []
+      responses:
+        201:
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        400:
+          $ref: '#/components/responses/BadInputError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
     get:
       summary: Get all tasks with optional filtering and pagination.
       tags:
@@ -734,6 +770,36 @@ paths:
                 $ref: '#/components/schemas/Task'
         400:
           $ref: '#/components/responses/BadInputError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenAccessError'
+        404:
+          $ref: '#/components/responses/TaskNotFoundError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      summary: Get task by ID
+      tags:
+        - Admin
+      description: Retrieve a specific task by its ID.
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          description: ID of the task to retrieve
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: A single task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
         401:
           $ref: '#/components/responses/UnauthorizedError'
         403:

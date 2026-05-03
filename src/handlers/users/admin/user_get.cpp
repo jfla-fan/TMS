@@ -1,8 +1,8 @@
 #include "user_get.hpp"
 
-#include "../../../utils/error.hpp"
-#include "../../../models/user.hpp"
-#include "../../../db/queries.hpp"
+#include "utils/error.hpp"
+#include "models/user.hpp"
+#include "db/queries.hpp"
 
 #include <userver/utils/from_string.hpp>
 #include <userver/components/component_context.hpp>

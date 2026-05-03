@@ -73,7 +73,7 @@ components_manager:
             throttling_enabled: false
             url_trailing_slash: strict-match
 
-        handler-user-task-create-post:
+        handler-user-task-post:
             path: /v1/tasks/
             method: POST
             task_processor: main-task-processor
@@ -127,16 +127,6 @@ components_manager:
                 scopes:
                     - admin
                     - user
-                
-        handler-admin-user-get:
-            path: /v1/admin/users/{user_id}
-            method: GET
-            task_processor: main-task-processor
-            auth:
-                types:
-                    - bearer
-                scopes:
-                    - admin
 
         handler-admin-user-post:
             path: /v1/admin/users/
@@ -158,6 +148,16 @@ components_manager:
                 scopes:
                     - admin
 
+        handler-admin-user-get:
+            path: /v1/admin/users/{user_id}
+            method: GET
+            task_processor: main-task-processor
+            auth:
+                types:
+                    - bearer
+                scopes:
+                    - admin
+
         handler-admin-user-delete:
             path: /v1/admin/users/{user_id}
             method: DELETE
@@ -167,6 +167,56 @@ components_manager:
                     - bearer
                 scopes:
                     - admin
+
+        # handler-admin-task-post:
+        #     path: /v1/tasks/
+        #     method: POST
+        #     task_processor: main-task-processor
+        #     auth:
+        #         types:
+        #             - bearer
+        #         scopes:
+        #             - admin
+        
+        # handler-admin-task-put:
+        #     path: /v1/admin/tasks/{task_id}
+        #     method: PUT
+        #     task_processor: main-task-processor
+        #     auth:
+        #         types:
+        #             - bearer
+        #         scopes:
+        #             - admin
+
+        # handler-admin-task-get:
+        #     path: /v1/admin/tasks/{task_id}
+        #     method: GET
+        #     task_processor: main-task-processor
+        #     auth:
+        #         types:
+        #             - bearer
+        #         scopes:
+        #             - admin
+
+        # handler-admin-task-list-get:
+        #     path: /v1/admin/tasks
+        #     method: GET
+        #     task_processor: main-task-processor
+        #     auth:
+        #         types:
+        #             - bearer
+        #         scopes:
+        #             - admin
+
+        # handler-admin-task-delete:
+        #     path: /v1/admin/tasks/{task_id}
+        #     method: DELETE
+        #     task_processor: main-task-processor
+        #     auth:
+        #         types:
+        #             - bearer
+        #         scopes:
+        #             - admin
 
         handler-extra-echo-get:
             path: /echo

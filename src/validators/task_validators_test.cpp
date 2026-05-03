@@ -27,7 +27,7 @@ namespace
     {
         // Correct entries
         ValidateTaskFieldTestEntry
-            { "Task Title",          true  }, // Valid title
+        { "Task Title",          true  }, // Valid title
         { "Task 123",            true  }, // Valid title with numbers
         { "Task-Title",          true  }, // Valid title with hyphen
         { "Task, Title!",        true  }, // Valid title with comma and exclamation mark
@@ -39,17 +39,17 @@ namespace
 
         // Incorrect entries
         { "",                    false }, // Empty title
-       { "Task@Title",          false }, // Invalid symbol (@)
-       { Repeat< 'a', 101 >(),  false }, // Too long (101 characters)
-       { "Task\nTitle",         false }, // Invalid symbol (newline)
-       { "Task\tTitle",         false }, // Invalid symbol (tab)
+        { "Task@Title",          false }, // Invalid symbol (@)
+        { Repeat< 'a', 101 >(),  false }, // Too long (101 characters)
+        { "Task\nTitle",         false }, // Invalid symbol (newline)
+        { "Task\tTitle",         false }, // Invalid symbol (tab)
     };
 
     constexpr std::array< ValidateTaskFieldTestEntry, 12 > ValidateTaskDescriptionTestEntries =
     {
         // Correct entries
         ValidateTaskFieldTestEntry
-            { "Task Description",    true  }, // Valid description
+        { "Task Description",    true  }, // Valid description
         { "Task 123",            true  }, // Valid description with numbers
         { "Task-Description",    true  }, // Valid description with hyphen
         { "Task, Description!",  true  }, // Valid description with comma and exclamation mark
@@ -61,15 +61,15 @@ namespace
         { "T\nD\tW\nNewlines",   true  }, // Valid description with newlines and tabs
     
         // Incorrect entries
-       { "Task@Description",    false }, // Invalid symbol (@)
-       { Repeat< 'a', 1001 >(), false }, // Too long (1001 characters)
+        { "Task@Description",    false }, // Invalid symbol (@)
+        { Repeat< 'a', 1001 >(), false }, // Too long (1001 characters)
     };
 
     constexpr std::array< ValidateTaskFieldTestEntry, 14 > ValidateTaskCategoryTestEntries =
     {
         // Correct entries
         ValidateTaskFieldTestEntry
-            { "Category",            true  }, // Valid category
+        { "Category",            true  }, // Valid category
         { "Category123",         true  }, // Valid category with numbers
         { "Category-Name",       true  }, // Valid category with hyphen
         { "Category_Name",       true  }, // Valid category with underscore
@@ -81,9 +81,9 @@ namespace
         // Incorrect entries
         { "",                    false }, // Empty category
         { "Category@Name",       false }, // Invalid symbol (@)
-       { Repeat< 'a', 101 >(),  false }, // Too long (101 characters)
-       { "Category Name",       false }, // Invalid symbol (space)
-       { "Category\nName",      false }, // Invalid symbol (newline)
+        { Repeat< 'a', 101 >(),  false }, // Too long (101 characters)
+        { "Category Name",       false }, // Invalid symbol (space)
+        { "Category\nName",      false }, // Invalid symbol (newline)
     };
 }
 

@@ -23,13 +23,13 @@ namespace tms::queries
     static const userver::storages::Query kUpdateUserById = R"(
         UPDATE tms.users
         SET
-            name = COALESCE($1, name),
-            last_name = COALESCE($2, last_name),
-            email = COALESCE($3, email),
-            login = COALESCE($4, login),
-            role = COALESCE($5, role),
+            name            = COALESCE($1, name),
+            last_name       = COALESCE($2, last_name),
+            email           = COALESCE($3, email),
+            login           = COALESCE($4, login),
+            role            = COALESCE($5, role),
             hashed_password = COALESCE($6, hashed_password),
-            updated_at = NOW()
+            updated_at      = NOW()
         WHERE user_id = $7
         RETURNING *;
     )";
@@ -60,27 +60,28 @@ namespace tms::queries
     static const userver::storages::Query kUpdateTaskById = R"(
         UPDATE tms.tasks
         SET
-            title = COALESCE($1, title),
+            title       = COALESCE($1, title),
             description = COALESCE($2, description),
-            category = COALESCE($3, category),
-            deadline = COALESCE($4, deadline),
-            priority = COALESCE($5, priority),
-            status = COALESCE($6, status),
-            updated_at = NOW()
-        WHERE task_id = $7
+            category    = COALESCE($3, category),
+            deadline    = COALESCE($4, deadline),
+            priority    = COALESCE($5, priority),
+            status      = COALESCE($6, status),
+            user_id     = COALESCE($7, user_id),
+            updated_at  = NOW()
+        WHERE task_id = $8
         RETURNING *
     )";
 
     static const userver::storages::Query kUpdateTaskByIdAndUser = R"(
         UPDATE tms.tasks
         SET
-            title = COALESCE($1, title),
+            title       = COALESCE($1, title),
             description = COALESCE($2, description),
-            category = COALESCE($3, category),
-            deadline = COALESCE($4, deadline),
-            priority = COALESCE($5, priority),
-            status = COALESCE($6, status),
-            updated_at = NOW()
+            category    = COALESCE($3, category),
+            deadline    = COALESCE($4, deadline),
+            priority    = COALESCE($5, priority),
+            status      = COALESCE($6, status),
+            updated_at  = NOW()
         WHERE task_id = $7 AND user_id = $8
         RETURNING *
     )";

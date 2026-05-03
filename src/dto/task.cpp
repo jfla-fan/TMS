@@ -1,8 +1,9 @@
-#include "../models/task.hpp"
+#include "models/task.hpp"
 #include "task.hpp"
 
 #include <userver/logging/log.hpp>
 #include <userver/utils/datetime.hpp>
+#include <userver/utils/from_string.hpp>
 #include <userver/formats/parse/common_containers.hpp>
 #include <userver/storages/postgres/io/chrono.hpp>
 
@@ -25,6 +26,16 @@ namespace
         }
 
         return timePoint ? std::make_optional(userver::storages::postgres::TimePointTz{ *timePoint }) : std::nullopt;
+    }
+
+    std::optional< tms::models::UserId > ToOptionalUserId(const std::optional< std::string >& user_id)
+    {
+        try
+        {
+            return userver::utils::FromString< int >(*user_id); 
+        } catch (...) {
+            return std::nullopt;
+        }
     }
 
     std::optional< tms::models::ETaskStatus > ToOptionalTaskStatus(const std::optional< std::string >& status)
@@ -53,6 +64,16 @@ namespace tms::dto
         };
     }
 
+
+    TaskCreateDTO2 Parse(const userver::formats::json::Value& json, userver::formats::parse::To< TaskCreateDTO2 >)
+    {
+        return {
+            Parse(json, userver::formats::parse::To< TaskCreateDTO > {}),
+            ToOptionalUserId(json["user_id"].As< std::optional< std::string > >())
+        };
+    }
+
+
     TaskUpdateDTO Parse(const userver::formats::json::Value& json, userver::formats::parse::To< TaskUpdateDTO >)
     {
         return {
@@ -60,4 +81,11 @@ namespace tms::dto
         };
     }
 
+
+    TaskUpdateDTO2 Parse(const userver::formats::json::Value& json, userver::formats::parse::To< TaskUpdateDTO2 >)
+    {
+        return {
+            Parse(json, userver::formats::parse::To< TaskCreateDTO2 > {})
+        };
+    }
 }

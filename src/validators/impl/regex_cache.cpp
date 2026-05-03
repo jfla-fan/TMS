@@ -110,7 +110,7 @@ std::shared_ptr< const icu::RegexPattern > RegexCache::operator [] (std::string_
 
 RegexCache& tms::validators::impl::GetDefaultRegexCache()
 {
-    // @todo need to have some coroutine-friendly cache initialization mechanism
+    /// @todo need to have some coroutine-friendly cache initialization mechanism
     static RegexCache cache;
     return cache;
 }

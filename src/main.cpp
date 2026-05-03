@@ -23,7 +23,7 @@
 #include "handlers/tasks/task_get.hpp"
 #include "handlers/tasks/task_update.hpp"
 #include "handlers/tasks/task_create.hpp"
-#include "handlers/tasks/task_list.hpp"
+#include "handlers/tasks/task_list_get.hpp"
 
 #include "utils/hash.hpp"
 

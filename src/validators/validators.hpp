@@ -15,6 +15,7 @@ namespace tms::dto
     struct UserCreateDTO;
     struct UserLoginDTO;
     struct TaskCreateDTO;
+    struct TaskCreateDTO2;
     struct TaskUpdateDTO;
 }
 
@@ -28,5 +29,6 @@ namespace tms::validators
     bool Validate(const tms::dto::UserCreateDTO& user_create_dto, ErrorRef error_info = std::nullopt);
     bool Validate(const tms::dto::UserLoginDTO& user_login_dto, ErrorRef error_info = std::nullopt);
     bool Validate(const tms::dto::TaskCreateDTO& task_create_dto, ErrorRef error_info = std::nullopt);
+    bool Validate(const tms::dto::TaskCreateDTO2& task_create_dto, ErrorRef error_info = std::nullopt);
     bool Validate(const tms::dto::TaskUpdateDTO& task_create_dto, ErrorRef error_info = std::nullopt);
 }
